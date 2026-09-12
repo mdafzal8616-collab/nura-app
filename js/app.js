@@ -9,6 +9,18 @@
     { key: "isha", label: "Isha" }
   ];
 
+  var CORE_HABITS = [
+    { id: "core-quran", name: "Read a little Qur'an" },
+    { id: "core-dhikr", name: "Dhikr / remembrance" },
+    { id: "core-gratitude", name: "One moment of gratitude" }
+  ];
+
+  var BONUS_HABITS = [
+    { id: "bonus-water", name: "Drink enough water" },
+    { id: "bonus-sleep", name: "Sleep on time" },
+    { id: "bonus-noscreen", name: "One hour with no phone" }
+  ];
+
   var RESET_ACTIONS = {
     low: "Just pray one prayer right now, even sitting down if you need to. That's enough for this moment.",
     normal: "Pick the very next prayer time, and set out your wudu or a reminder before it comes.",
@@ -139,6 +151,162 @@
     renderWeekRow();
   }
 
+  // ---------- HABITS RENDER ----------
+
+  function getHabitDefs() {
+    return readJSON("nura_habits_defs", []);
+  }
+
+  function saveHabitDefs(defs) {
+    writeJSON("nura_habits_defs", defs);
+  }
+
+  function addPersonalHabit(name) {
+    var defs = getHabitDefs();
+    defs.push({ id: "p-" + Date.now(), name: name });
+    saveHabitDefs(defs);
+  }
+
+  function deletePersonalHabit(id) {
+    var defs = getHabitDefs().filter(function (h) {
+      return h.id !== id;
+    });
+    saveHabitDefs(defs);
+  }
+
+  function getHabitLogs() {
+    return readJSON("nura_habits_log", {});
+  }
+
+  function getDayHabitLog(dateKey) {
+    var all = getHabitLogs();
+    return all[dateKey] || {};
+  }
+
+  function setDayHabitLog(dateKey, log) {
+    var all = getHabitLogs();
+    all[dateKey] = log;
+    writeJSON("nura_habits_log", all);
+  }
+
+  function toggleHabitDone(habitId) {
+    var key = todayKey();
+    var log = getDayHabitLog(key);
+    log[habitId] = !log[habitId];
+    setDayHabitLog(key, log);
+  }
+
+  function buildHabitItem(habit, log, deletable) {
+    var item = document.createElement("div");
+    item.className = "habit-item";
+
+    var name = document.createElement("span");
+    name.className = "name";
+    name.textContent = habit.name;
+
+    var actions = document.createElement("div");
+    actions.className = "habit-actions";
+
+    var done = !!log[habit.id];
+    var toggle = document.createElement("button");
+    toggle.className = "habit-toggle" + (done ? " done" : "");
+    toggle.textContent = done ? "Done" : "Mark done";
+    toggle.addEventListener("click", function () {
+      toggleHabitDone(habit.id);
+      renderHabits();
+    });
+    actions.appendChild(toggle);
+
+    if (deletable) {
+      var del = document.createElement("button");
+      del.className = "habit-delete";
+      del.textContent = "✕";
+      del.setAttribute("aria-label", "Remove habit");
+      del.addEventListener("click", function () {
+        deletePersonalHabit(habit.id);
+        renderHabits();
+      });
+      actions.appendChild(del);
+    }
+
+    item.appendChild(name);
+    item.appendChild(actions);
+    return item;
+  }
+
+  function renderHabits() {
+    document.getElementById("habits-date").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+
+    var key = todayKey();
+    var log = getDayHabitLog(key);
+    var personalDefs = getHabitDefs();
+    var allHabits = CORE_HABITS.concat(BONUS_HABITS, personalDefs);
+    var doneCount = allHabits.reduce(function (sum, h) {
+      return sum + (log[h.id] ? 1 : 0);
+    }, 0);
+    document.getElementById("habits-count-badge").textContent = doneCount + " of " + allHabits.length;
+
+    var coreList = document.getElementById("core-habit-list");
+    coreList.innerHTML = "";
+    CORE_HABITS.forEach(function (h) {
+      coreList.appendChild(buildHabitItem(h, log, false));
+    });
+
+    var bonusList = document.getElementById("bonus-habit-list");
+    bonusList.innerHTML = "";
+    BONUS_HABITS.forEach(function (h) {
+      bonusList.appendChild(buildHabitItem(h, log, false));
+    });
+
+    var personalList = document.getElementById("personal-habit-list");
+    personalList.innerHTML = "";
+    if (personalDefs.length === 0) {
+      var empty = document.createElement("p");
+      empty.className = "habit-empty";
+      empty.textContent = "No personal habits yet — add one that fits your day.";
+      personalList.appendChild(empty);
+    } else {
+      personalDefs.forEach(function (h) {
+        personalList.appendChild(buildHabitItem(h, log, true));
+      });
+    }
+  }
+
+  function initAddHabitModal() {
+    var modal = document.getElementById("modal-add-habit");
+    var openBtn = document.getElementById("open-add-habit");
+    var closeBtn = document.getElementById("add-habit-close");
+    var input = document.getElementById("add-habit-input");
+    var saveBtn = document.getElementById("add-habit-save");
+
+    function save() {
+      var val = input.value.trim();
+      if (val) {
+        addPersonalHabit(val);
+        renderHabits();
+      }
+      modal.classList.add("hidden");
+    }
+
+    openBtn.addEventListener("click", function () {
+      input.value = "";
+      modal.classList.remove("hidden");
+    });
+
+    closeBtn.addEventListener("click", function () {
+      modal.classList.add("hidden");
+    });
+
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) modal.classList.add("hidden");
+    });
+
+    saveBtn.addEventListener("click", save);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") save();
+    });
+  }
+
   // ---------- NAV ----------
 
   function setActiveView(name) {
@@ -150,6 +318,7 @@
       btn.classList.toggle("active", btn.dataset.nav === name);
     });
     if (name === "home") renderHome();
+    if (name === "habits") renderHabits();
   }
 
   function initNav() {
@@ -304,6 +473,7 @@
     initNameModal();
     initCheckinModal();
     initResetModal();
+    initAddHabitModal();
     renderHome();
   });
 })();

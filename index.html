@@ -41,19 +41,46 @@
     <button class="btn btn-primary btn-full btn-reset" id="open-reset">Reset Today</button>
   </main>
 
-  <!-- PLACEHOLDER VIEWS -->
+  <!-- HABITS VIEW -->
   <main class="view hidden" id="view-habits" data-view="habits">
-    <div class="placeholder">
-      <div class="placeholder-motif" aria-hidden="true">
-        <svg viewBox="0 0 40 40" width="48" height="48">
+    <header class="home-header">
+      <div>
+        <p class="eyebrow" id="habits-date"></p>
+        <h1>Habits</h1>
+      </div>
+      <div class="motif" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="36" height="36">
           <path d="M22 4a16 16 0 1 0 12 26.6A13 13 0 0 1 22 4Z" fill="var(--gold)"/>
         </svg>
       </div>
-      <h2>Habits</h2>
-      <p>This part of NURA is still being tested — coming soon.</p>
-    </div>
+    </header>
+
+    <section class="card">
+      <div class="card-row">
+        <h2>Today</h2>
+        <span class="count-badge" id="habits-count-badge">0 of 0</span>
+      </div>
+      <p class="habits-summary-line">Small and steady. Tap to mark what you did today.</p>
+    </section>
+
+    <section class="card">
+      <h2>Core Habits</h2>
+      <div class="habit-list" id="core-habit-list"></div>
+    </section>
+
+    <section class="card">
+      <h2>Bonus Habits</h2>
+      <div class="habit-list" id="bonus-habit-list"></div>
+    </section>
+
+    <section class="card">
+      <h2>Personal Habits</h2>
+      <div class="habit-list" id="personal-habit-list"></div>
+      <button class="btn btn-outline btn-full" id="open-add-habit">+ Add a personal habit</button>
+    </section>
   </main>
 
+  <!-- PLACEHOLDER VIEWS -->
   <main class="view hidden" id="view-bhai" data-view="bhai">
     <div class="placeholder">
       <div class="placeholder-motif" aria-hidden="true">
@@ -148,6 +175,19 @@
       <p class="reset-closing">One small step counts.</p>
       <button class="btn btn-primary btn-full" id="reset-done">Done</button>
     </div>
+  </div>
+</div>
+
+<!-- ADD HABIT MODAL -->
+<div class="modal-overlay hidden" id="modal-add-habit">
+  <div class="modal-sheet">
+    <div class="modal-header-row">
+      <h2>Add a Habit</h2>
+      <button class="icon-btn" id="add-habit-close" aria-label="Close">✕</button>
+    </div>
+    <p class="modal-sub">What's something small you want to do daily?</p>
+    <input type="text" id="add-habit-input" class="text-input" placeholder="e.g. Stretch for 5 minutes" maxlength="40">
+    <button class="btn btn-primary btn-full" id="add-habit-save">Add Habit</button>
   </div>
 </div>
 

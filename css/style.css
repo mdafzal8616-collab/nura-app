@@ -320,13 +320,14 @@ html, body {
   color: var(--ink);
 }
 
-.prayer-list {
+.prayer-list, .habit-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 10px;
 }
 
-.prayer-item {
+.prayer-item, .habit-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -336,13 +337,13 @@ html, body {
   padding: 14px 16px;
 }
 
-.prayer-item .name {
+.prayer-item .name, .habit-item .name {
   font-size: 15px;
   font-weight: 600;
   color: var(--ink);
 }
 
-.prayer-toggle {
+.prayer-toggle, .habit-toggle {
   border: 1.5px solid var(--emerald);
   background: var(--card-bg);
   color: var(--emerald);
@@ -354,9 +355,40 @@ html, body {
   font-family: inherit;
 }
 
-.prayer-toggle.done {
+.prayer-toggle.done, .habit-toggle.done {
   background: var(--emerald);
   color: white;
+}
+
+.habit-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.habit-delete {
+  background: none;
+  border: none;
+  color: #8a8371;
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.habit-empty {
+  color: #6b6455;
+  font-size: 14px;
+  margin: 10px 0 14px;
+}
+
+.habits-summary-line {
+  color: #6b6455;
+  font-size: 13px;
+  margin: 0;
+}
+
+#open-add-habit {
+  margin-top: 14px;
 }
 
 .energy-options {
