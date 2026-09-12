@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>NURA</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- HOME VIEW -->
+  <main class="view" id="view-home" data-view="home">
+    <header class="home-header">
+      <div>
+        <p class="eyebrow" id="home-date"></p>
+        <h1 id="home-greeting">Assalamu Alaikum</h1>
+      </div>
+      <div class="motif" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="36" height="36">
+          <path d="M22 4a16 16 0 1 0 12 26.6A13 13 0 0 1 22 4Z" fill="var(--gold)"/>
+        </svg>
+      </div>
+    </header>
+
+    <section class="card card-prayers" id="card-prayers">
+      <div class="card-row">
+        <h2>Today's Prayers</h2>
+        <span class="count-badge" id="prayer-count-badge">0 of 5</span>
+      </div>
+      <div class="prayer-dots-preview" id="prayer-dots-preview"></div>
+      <button class="btn btn-outline btn-full" id="open-checkin">Open Prayer Check-in</button>
+    </section>
+
+    <section class="card card-week">
+      <h2>Last 7 Days</h2>
+      <div class="week-row" id="week-row"></div>
+    </section>
+
+    <button class="btn btn-primary btn-full btn-reset" id="open-reset">Reset Today</button>
+  </main>
+
+  <!-- PLACEHOLDER VIEWS -->
+  <main class="view hidden" id="view-habits" data-view="habits">
+    <div class="placeholder">
+      <div class="placeholder-motif" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="48" height="48">
+          <path d="M22 4a16 16 0 1 0 12 26.6A13 13 0 0 1 22 4Z" fill="var(--gold)"/>
+        </svg>
+      </div>
+      <h2>Habits</h2>
+      <p>This part of NURA is still being tested — coming soon.</p>
+    </div>
+  </main>
+
+  <main class="view hidden" id="view-bhai" data-view="bhai">
+    <div class="placeholder">
+      <div class="placeholder-motif" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="48" height="48">
+          <path d="M22 4a16 16 0 1 0 12 26.6A13 13 0 0 1 22 4Z" fill="var(--gold)"/>
+        </svg>
+      </div>
+      <h2>Bhai AI</h2>
+      <p>This part of NURA is still being tested — coming soon.</p>
+    </div>
+  </main>
+
+  <main class="view hidden" id="view-profile" data-view="profile">
+    <div class="placeholder">
+      <div class="placeholder-motif" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="48" height="48">
+          <path d="M22 4a16 16 0 1 0 12 26.6A13 13 0 0 1 22 4Z" fill="var(--gold)"/>
+        </svg>
+      </div>
+      <h2>Profile</h2>
+      <p>This part of NURA is still being tested — coming soon.</p>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-nav="home" aria-label="Home">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-nav="habits" aria-label="Habits">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 4h14v16l-7-4-7 4z"/></svg>
+      <span>Habits</span>
+    </button>
+    <button class="nav-btn nav-add" data-nav="add" aria-label="Add">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z"/></svg>
+    </button>
+    <button class="nav-btn" data-nav="bhai" aria-label="Bhai AI">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 4h16v12H7l-3 3z"/></svg>
+      <span>Bhai AI</span>
+    </button>
+    <button class="nav-btn" data-nav="profile" aria-label="Profile">
+      <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- NAME PROMPT MODAL -->
+<div class="modal-overlay hidden" id="modal-name">
+  <div class="modal-sheet">
+    <h2>Welcome to NURA</h2>
+    <p class="modal-sub">What should we call you?</p>
+    <input type="text" id="name-input" class="text-input" placeholder="Your name" maxlength="30">
+    <button class="btn btn-primary btn-full" id="name-save">Continue</button>
+  </div>
+</div>
+
+<!-- PRAYER CHECK-IN MODAL -->
+<div class="modal-overlay hidden" id="modal-checkin">
+  <div class="modal-sheet">
+    <div class="modal-header-row">
+      <h2>Prayer Check-in</h2>
+      <button class="icon-btn" id="checkin-close" aria-label="Close">✕</button>
+    </div>
+    <p class="modal-sub" id="checkin-date"></p>
+    <div class="prayer-list" id="prayer-list"></div>
+  </div>
+</div>
+
+<!-- RESET TODAY MODAL -->
+<div class="modal-overlay hidden" id="modal-reset">
+  <div class="modal-sheet">
+    <div class="modal-header-row">
+      <h2>Reset Today</h2>
+      <button class="icon-btn" id="reset-close" aria-label="Close">✕</button>
+    </div>
+
+    <div id="reset-step-energy">
+      <p class="modal-sub">How's your energy right now?</p>
+      <div class="energy-options">
+        <button class="btn btn-outline btn-full" data-energy="low">Low energy</button>
+        <button class="btn btn-outline btn-full" data-energy="normal">Normal energy</button>
+        <button class="btn btn-outline btn-full" data-energy="high">High energy</button>
+      </div>
+    </div>
+
+    <div id="reset-step-action" class="hidden">
+      <p class="modal-sub">Try this:</p>
+      <p class="reset-action" id="reset-action-text"></p>
+      <p class="reset-closing">One small step counts.</p>
+      <button class="btn btn-primary btn-full" id="reset-done">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIMPLE TOAST -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
