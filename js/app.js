@@ -10,8 +10,8 @@
   ];
 
   var CORE_HABITS = [
-    { id: "core-quran", name: "Read a little Qur'an" },
-    { id: "core-dhikr", name: "Dhikr / remembrance" },
+    { id: "core-quran", name: "Quran" },
+    { id: "core-zikr", name: "Zikr" },
     { id: "core-gratitude", name: "One moment of gratitude" }
   ];
 
