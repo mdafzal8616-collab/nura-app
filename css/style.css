@@ -387,6 +387,38 @@ html, body {
   margin: 0;
 }
 
+.verse-box {
+  background: var(--ivory);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.verse-ref {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.verse-arabic {
+  margin: 0 0 10px;
+  font-size: 22px;
+  line-height: 2;
+  color: var(--emerald);
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-family: "Traditional Arabic", "Scheherazade New", "Noto Naskh Arabic", serif;
+}
+
+.verse-source {
+  margin: 0;
+  font-size: 11px;
+  color: #8a8371;
+}
+
 #open-add-habit {
   margin-top: 14px;
 }

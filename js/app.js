@@ -234,8 +234,58 @@
     return item;
   }
 
+  // ---------- QURAN VERSE OF THE DAY ----------
+  // Arabic text: verbatim from the Tanzil Project (tanzil.net), CC BY 3.0 —
+  // attribution required, text must not be altered. No translation is shown
+  // yet; that is added separately once ready. See docs/decisions.md.
+
+  var QURAN_DATA_URL = "assets/quran/quran-uthmani.txt";
+  var quranVersesCache = null;
+  var quranLoadPromise = null;
+
+  function loadQuranVerses() {
+    if (quranVersesCache) return Promise.resolve(quranVersesCache);
+    if (quranLoadPromise) return quranLoadPromise;
+
+    quranLoadPromise = fetch(QURAN_DATA_URL)
+      .then(function (res) { return res.text(); })
+      .then(function (text) {
+        var verses = [];
+        text.split("\n").forEach(function (line) {
+          var m = line.match(/^(\d+)\|(\d+)\|(.+)$/);
+          if (m) {
+            verses.push({ surah: Number(m[1]), ayah: Number(m[2]), text: m[3].trim() });
+          }
+        });
+        quranVersesCache = verses;
+        return verses;
+      });
+
+    return quranLoadPromise;
+  }
+
+  function getTodayVerseIndex(total) {
+    var epoch = Date.UTC(2024, 0, 1);
+    var daysSince = Math.floor((Date.now() - epoch) / 86400000);
+    return ((daysSince % total) + total) % total;
+  }
+
+  function renderVerseOfDay() {
+    var box = document.getElementById("verse-box");
+    loadQuranVerses().then(function (verses) {
+      if (!verses.length) return;
+      var verse = verses[getTodayVerseIndex(verses.length)];
+      document.getElementById("verse-ref").textContent = "Surah " + verse.surah + ":" + verse.ayah;
+      document.getElementById("verse-arabic").textContent = verse.text;
+      box.classList.remove("hidden");
+    }).catch(function () {
+      box.classList.add("hidden");
+    });
+  }
+
   function renderHabits() {
     document.getElementById("habits-date").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+    renderVerseOfDay();
 
     var key = todayKey();
     var log = getDayHabitLog(key);
